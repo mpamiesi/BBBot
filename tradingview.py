@@ -14,8 +14,19 @@ def on_message(ws, message):
             # Filtrar las alertas por activo
             for asset in TV_ASSETS:
                 if asset in alert:
+                    # Obtener los datos de la alerta
+                    parts = alert.split('\n')
+                    pair = parts[0]
+                    price = parts[1].split(':')[1].strip()
+                    position = parts[2].split(':')[1].strip()
+                    timeframe = parts[3].split(':')[1].strip()
+                    
+                    # Construir el mensaje a enviar al grupo de Telegram
+                    message = MESSAGE_FORMAT.format(pair=pair, price=price, position=position, timeframe=timeframe)
+                    
                     # Enviar la alerta al grupo de Telegram
-                    send_message(alert)
+                    send_message(message)
+
 
 # Configuración del WebSocket de Trading View
 def start_tradingview_websocket():
